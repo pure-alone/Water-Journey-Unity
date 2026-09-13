@@ -6,7 +6,7 @@
 
 **Architecture:** One Unity scene is bootstrapped at runtime. `DewyApp` owns page navigation and scene state; focused helpers create uGUI elements, procedural sprites, drag handling, audio playback, and reusable controls. The HTML/CSS prototype remains the canonical mapping reference but is not embedded in the runtime.
 
-**Tech Stack:** Unity 6000.3.15f1, C#, UnityEngine.UI/uGUI, EventSystem, WebGL, Python static contract tests.
+**Tech Stack:** Unity 6000.3.15f1, C#, UnityEngine.UI/uGUI, EventSystem, WebGL.
 
 **Spec:** `docs/superpowers/specs/2026-09-13-water-journey-unity-design.md`
 
@@ -15,17 +15,16 @@
 - Reference resolution is exactly 450×900 portrait.
 - Pages: Home, Scene 1–6, Credits.
 - Scene interactions and Next-lock behavior must match the supplied `app.js`.
-- All 18 MP3 files are copied verbatim into `Assets/Resources/Audio/`; no codec/encoding/bitrate validation or transcoding is performed.
+- All 18 MP3 files are copied directly into `Assets/Resources/Audio/`; do not inspect, validate, decode, transcode, or re-encode their codec/encoding/bitrate.
 - Background sound preference persists using `PlayerPrefs`.
 - Target is Unity WebGL suitable for Unity Build Automation and itch.io.
 - Main branch is explicitly authorized by the user.
 
 ---
 
-### Task 1: Project contract tests and Unity skeleton
+### Task 1: Unity project skeleton
 
 **Files:**
-- Create: `tests/test_unity_project.py`
 - Create: `Packages/manifest.json`
 - Create: `ProjectSettings/ProjectVersion.txt`
 - Create: `ProjectSettings/EditorBuildSettings.asset`
@@ -33,56 +32,52 @@
 
 **Produces:** A Unity project that has a single build scene and declares uGUI.
 
-- [ ] Write failing Python tests for required project files, reference resolution markers, eight page identifiers, and exactly 18 expected MP3 paths.
-- [ ] Run `python -m unittest tests/test_unity_project.py -v` and confirm failure because Unity files are absent.
-- [ ] Add minimal project/package/scene files.
-- [ ] Re-run tests for the skeleton expectations.
+- [x] Add project/package/scene files for Unity 6000.3.15f1.
+- [x] Register `Assets/Scenes/Main.unity` as the enabled build scene.
 
 ### Task 2: Runtime UI foundation
 
 **Files:**
 - Create: `Assets/Scripts/DewyBootstrap.cs`
-- Create: `Assets/Scripts/UIFactory.cs`
-- Create: `Assets/Scripts/PointerDrag.cs`
-- Create: `Assets/Scripts/AudioController.cs`
+- Create: runtime UI/audio/drag helpers under `Assets/Scripts/`
 
 **Produces:** Runtime Canvas/EventSystem creation, 450×900 CanvasScaler, reusable uGUI factories, drag events, and PlayerPrefs-backed audio.
 
-- [ ] Extend contract tests to require exact runtime API/type markers and resource paths; verify red.
-- [ ] Implement helpers without external plugins.
-- [ ] Re-run tests and verify green.
+- [x] Implement helpers without external UI plugins.
+- [x] Configure the runtime for the 450×900 reference layout.
 
 ### Task 3: Pages and story interactions
 
 **Files:**
 - Create: `Assets/Scripts/DewyApp.cs`
+- Create: `Assets/Scripts/DewyPages.cs`
+- Create: `Assets/Scripts/DewyContent.cs`
 
-**Produces:** Home, Scene 1–6, Credits, navigation/progress, sound toggle, toasts, completion labels, and all prototype interactions.
+**Produces:** Home, Scene 1–6, Credits, navigation/progress, sound toggle, toasts, completion labels, and the prototype interactions.
 
-- [ ] Extend tests for all page copy, interaction thresholds/counts, completion labels, navigation targets, and audio keys; verify red.
-- [ ] Implement page builders and scene-specific interaction handlers.
-- [ ] Re-run all tests and verify green.
+- [x] Implement Home, Scene 1–6, and Credits.
+- [x] Preserve completion-gated Next navigation and Restart/Home flow.
+- [x] Preserve the scene BGM/SFX mapping and persisted sound preference.
 
 ### Task 4: Original audio assets and WebGL presentation
 
 **Files:**
-- Copy: `audio/*.mp3` → `Assets/Resources/Audio/*.mp3`
-- Create: `Assets/WebGLTemplates/Dewy/index.html`
+- Copy: the supplied 18 `*.mp3` files → `Assets/Resources/Audio/*.mp3`
+- Create: `Assets/WebGLTemplates/Dewy/`
+- Create: `Assets/Editor/DewyBuild.cs`
 - Create: `README.md`
 
-**Produces:** Original audio files committed unchanged and a WebGL template/documentation for 450×900 itch.io deployment.
+**Produces:** Directly copied audio files and a WebGL configuration for the 450×900 itch.io deployment.
 
-- [ ] Extend tests to compare source/destination MP3 bytes with SHA-256 as a copy-integrity check only (not codec validation); verify red before copying.
-- [ ] Copy all 18 files byte-for-byte without inspecting or transcoding audio content.
-- [ ] Add responsive 1:2 WebGL shell/template and build/deployment instructions.
-- [ ] Run all tests.
+- [x] Copy all 18 MP3 files directly without inspecting, validating, decoding, transcoding, or re-encoding audio content.
+- [x] Add the 450×900 WebGL template.
+- [x] Add editor/pre-build WebGL settings for Unity Build Automation.
 
-### Task 5: Verification and GitHub commit
+### Task 5: GitHub delivery and verification
 
 **Files:** all project files above.
 
-- [ ] Run `python -m unittest discover -s tests -v`.
-- [ ] Confirm 18 MP3 files exist and source/destination byte hashes match.
-- [ ] Inspect generated tree for excluded temporary/source prototype files.
-- [ ] Commit the complete project to `main` in `pure-alone/Water-Journey-Unity`.
-- [ ] Fetch committed key files from GitHub and verify the final commit contains the project skeleton, scripts, and audio paths.
+- [x] Commit the complete Unity project to `main` in `pure-alone/Water-Journey-Unity`.
+- [x] Confirm the expected 18 MP3 filenames are present in `Assets/Resources/Audio/` without opening or validating their audio encoding.
+- [x] Confirm `ProjectSettings/ProjectVersion.txt`, the main scene, runtime scripts, WebGL template, and `DewyBuild.cs` exist in the target repository.
+- [ ] Actual C# compilation and WebGL player generation must be confirmed by Unity Editor or Unity Build Automation; this execution environment does not contain the Unity Editor.

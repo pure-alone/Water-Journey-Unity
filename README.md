@@ -26,13 +26,13 @@ They are used as project assets directly. The migration does **not** inspect, va
 
 ## Unity version
 
-The project is pinned to **Unity 6000.3.15f1 (Unity 6.3 LTS)** in `ProjectSettings/ProjectVersion.txt`.
+This compatibility branch is pinned to **Unity 2022.3.62f2 LTS** in `ProjectSettings/ProjectVersion.txt`, matching the recommended version for PROG2006 Assessment 2.
 
 ## Open locally
 
 1. Clone this repository.
 2. In Unity Hub choose **Add project from disk** and select the repository folder.
-3. Open it with Unity **6000.3.15f1** and install Web Build Support if necessary.
+3. Open it with Unity **2022.3.62f2** and install Web Build Support if necessary.
 4. Open `Assets/Scenes/Main.unity`.
 5. Press Play.
 
@@ -53,7 +53,7 @@ Use **Dewy > Build WebGL for itch.io** in the Unity Editor. The helper in `Asset
 1. Connect the GitHub repository `pure-alone/Water-Journey-Unity` in Unity Cloud.
 2. Create a Build Automation target for **WebGL**.
 3. Use branch **main**.
-4. Use Unity **6000.3.15f1 / Unity 6.3 LTS**.
+4. Use Unity **2022.3.62f2 LTS**.
 5. Trigger the build and download the generated WebGL artifact.
 
 ## itch.io deployment
@@ -81,3 +81,15 @@ Use **Dewy > Build WebGL for itch.io** in the Unity Editor. The helper in `Asset
 ## Verification note
 
 The repository structure and required files have been checked remotely. Actual Unity C# compilation and WebGL player generation require the Unity Editor or Unity Build Automation and are therefore the final build-time verification step.
+
+
+## PROG2006 Unity 2022 compatibility branch
+
+Use branch `unity-2022.3.62f2` for the assessment-compatible build.
+
+Compatibility changes:
+- Unity Editor pinned to **2022.3.62f2**.
+- UGUI pinned to **com.unity.ugui 1.0.0**.
+- Built-in font selection uses **Arial.ttf** on Unity 2022.x while preserving **LegacyRuntime.ttf** for Unity 6+.
+- PlayerSettings are regenerated from a Unity 2022.3.62f2 project baseline and configured for the existing 450 × 900 WebGL experience.
+- Existing scenes, scripts, audio files, interactions, story flow and itch.io WebGL template are otherwise preserved.
